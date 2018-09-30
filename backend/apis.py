@@ -466,19 +466,20 @@ def foursquare(place, num_bars):
     res = req.get(BASE_URL, params=params)
     yield from res.json()['response']['venues']
 
-def route(src, dest):
+def route(*waypts):
     BASE_URL = "https://route.api.here.com/routing/7.2/calculateroute.json"
+
     params = {
-        'waypoint0': src,
-        'waypoint1': dest,
         'mode': 'fastest;pedestrian'
     }
     params.update(config.HERE_API_PARAMS)
-    #app_code is breaking everything
+
+    for idx, waypt in enumerate(waypts):
+        params['waypoint' + str(idx)] = "{},{}".format(*waypt)
 
     res = req.get(BASE_URL, params=params)
-    print(res.json())
-    return render_template("location.html", obj=res)
+    print(res.url)
+    return res.json()
 
 def addy_to_geo(addy):
     params = {'address': addy, 'key': config.GMAP_API}
@@ -495,3 +496,5 @@ def bars(src, dest, params):
     bars = sorted(foursquare(origin, params['duration']),
         key = lambda b: abs(direction - angle_from(origin, (b['location']['lat'], b['location']['lng']))))
     return bars
+
+print(route(addy_to_geo('251 Mercer St, Ny, USA'), addy_to_geo('140 E 14th Street NY USA')))
