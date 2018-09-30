@@ -16,6 +16,7 @@ data class BarHopMeta(
         var sll: String,
         var ell: String,
         var stime: Date,
+        var barCount: Int,
         var duration: Int)
 
 data class HopMember(

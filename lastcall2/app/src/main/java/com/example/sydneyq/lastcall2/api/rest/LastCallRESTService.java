@@ -22,18 +22,16 @@ public interface LastCallRESTService {
             @Body Date stime,
             @Body int duration);
 
-    @PUT("hop/{hopcode}/member")
-    Call<Boolean> addMember(
-            @Path("hopcode") String hopCode,
-            @Body HopMember member);
-
-    @GET("hop/join/{hopcode}")
-    Call<BarHopMeta> joinHop(@Path("hopcode") String hopcode);
+    @POST("hop/join/{hopcode}")
+    Call<BarHopMeta> joinHop(@Path("hopcode") String hopcode, @Body HopMember member);
 
     @GET("hop/member/{id}")
     Call<HopMember> getMember(@Path("id") String id);
 
-    @GET("hop/{hopId")
+    @GET("hop/{hopId}")
     Call<Hop> getHop(@Path("hopId") String hopId);
+
+    @POST("hop/update/{memberId}")
+    Call<BarHopMeta> updateHop(@Path("memberId") String memberId, @Body Hop hop);
 }
 

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.CreateHop">
+
+    <TextView
+        android:id="@+id/fragmentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Create a Hop"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/creatorName"
+        android:layout_below="@id/fragmentTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/createHopFieldHeight"
+        android:layout_marginRight="@dimen/createHopFieldMargin"
+        android:layout_marginLeft="@dimen/createHopFieldMargin"
+        android:layout_marginTop="@dimen/createHopFieldMargin"
+        android:hint="Your Name" />
+
+    <EditText
+        android:id="@+id/hopName"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/createHopFieldHeight"
+        android:layout_marginRight="@dimen/createHopFieldMargin"
+        android:layout_marginLeft="@dimen/createHopFieldMargin"
+        android:layout_below="@id/creatorName"
+        android:hint="Hop Name"
+        android:layout_marginTop="@dimen/createHopFieldMargin" />
+    <EditText
+        android:id="@+id/hopStartTime"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/createHopFieldHeight"
+        android:layout_below="@id/hopName"
+        android:layout_marginRight="@dimen/createHopFieldMargin"
+        android:layout_marginLeft="@dimen/createHopFieldMargin"
+        android:layout_marginTop="@dimen/createHopFieldMargin"
+        android:hint="When does it start?"
+        android:inputType="time" />
+    <EditText
+        android:id="@+id/hopDuration"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/createHopFieldHeight"
+        android:layout_below="@id/hopStartTime"
+        android:layout_marginRight="@dimen/createHopFieldMargin"
+        android:layout_marginLeft="@dimen/createHopFieldMargin"
+        android:layout_marginTop="@dimen/createHopFieldMargin"
+        android:inputType="number"
+        android:hint="duration"/>
+    <TextView
+        android:id="@+id/hopDurationMinuteLabel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/createHopFieldHeight"
+        android:text="Minutes"
+        android:layout_below="@id/hopStartTime"
+        android:textSize="20dp"
+        android:layout_toRightOf="@id/hopDuration"
+        android:gravity="bottom" />
+    <TextView
+        android:id="@+id/ToleranceGroupLabel"
+        android:text="How Much Can You Drink?"
+        android:layout_below="@id/hopDuration"
+        android:textSize="15dp"
+        android:textColor="#000000"
+        android:layout_marginLeft="15dp"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content" />
+    <RadioButton
+        android:id="@+id/toleranceLow"
+        android:layout_width="80dp"
+        android:layout_height="@dimen/createHopRadioButtonDimen"
+        android:gravity="center"
+        android:text="Light"
+        android:layout_below="@id/ToleranceGroupLabel"
+        android:layout_marginLeft="@dimen/createHopFieldMargin"
+        android:scaleX="0.75"
+        android:scaleY="0.75"/>
+    <RadioButton
+        android:id="@+id/toleranceMed"
+        android:layout_width="80dp"
+        android:layout_height="@dimen/createHopRadioButtonDimen"
+        android:layout_below="@id/ToleranceGroupLabel"
+        android:layout_centerHorizontal="true"
+        android:text="Some drinks"
+        android:scaleY="0.75"
+        android:scaleX="0.75" />
+    <RadioButton
+        android:id="@+id/toleranceHigh"
+        android:layout_width="80dp"
+        android:layout_height="@dimen/createHopRadioButtonDimen"
+        android:layout_below="@id/ToleranceGroupLabel"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/createHopFieldMargin"
+        android:text="Lots"
+        android:scaleY="0.75"
+        android:scaleX="0.75" />
+
+    <Button
+        android:id="@+id/submitHop"
+        android:layout_width="150dp"
+        android:layout_height="@dimen/createHopFieldHeight"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/createHopFieldMargin"
+        android:layout_marginBottom="@dimen/createHopFieldMargin"
+        android:textSize="20dp"
+        android:background="#96e480"
+        android:textColor="#ffffff"
+        android:text="Make Hop!" />
+</RelativeLayout>
