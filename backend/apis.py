@@ -492,6 +492,6 @@ def bars(src, dest, params):
     origin = addy_to_geo(src)
     end = addy_to_geo(dest)
     direction = angle_from(origin, end)
-    bars = sorted(foursquare(origin, params['limit']),
+    bars = sorted(foursquare(origin, params['duration']),
         key = lambda b: abs(direction - angle_from(origin, (b['location']['lat'], b['location']['lng']))))
     return bars
