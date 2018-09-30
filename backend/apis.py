@@ -495,7 +495,7 @@ def bars(src, dest, params):
     origin = addy_to_geo(src)
     end = addy_to_geo(dest)
     direction = angle_from(origin, end)
-    for bar in sorted(foursquare(origin, params['duration']),
+    for bar in sorted(foursquare(origin, params['barCount']),
             key = lambda b: abs(direction - angle_from(origin, (b['location']['lat'], b['location']['lng'])))):
         yield {
             'barName': bar['name'],
@@ -507,3 +507,4 @@ def bars(src, dest, params):
             'menu': []
         }
 
+print(list(foursquare(addy_to_geo('60606'), 5)))
