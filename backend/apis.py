@@ -492,8 +492,8 @@ def addy_to_geo(addy):
     return coords['Latitude'], coords['Longitude']
 
 def bars(src, dest, params):
-    origin = addy_to_geo(src)
-    end = addy_to_geo(dest)
+    origin = (src)
+    end = (dest)
     direction = angle_from(origin, end)
     for bar in sorted(foursquare(origin, params['barCount']),
             key = lambda b: abs(direction - angle_from(origin, (b['location']['lat'], b['location']['lng'])))):
