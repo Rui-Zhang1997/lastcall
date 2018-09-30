@@ -110,8 +110,31 @@ def get_hop():
     }
 
 @app.route('/hop/update/{member_id}', methods=["POST"])
-def update_hop():
-    return "hop"
+def update_hop(mem_id):
+    hop = request.json
+    db = connect_to_db()
+    hops = db[config.COLLECTIONS['hop']]
+
+    hop = hops.find_one({'hopId': hop['hopId']})
+    if hop is None or hope == {} or hop == []:
+        return 404, 'Hop not found'
+
+    hops.update({'hopId': hop['hopId'], '$pull': {'members': {'memberId': mem_id}}})
+
+    new_hop['hopId'] = next(hop_ids)
+    new_hop['finalized'] = True
+    new_hop['members'] = [
+        {
+            "memberName": hop['creatorName'],
+            "memberId": next(memb_id),
+            "drunkLevel": hop['drunkLevel'],
+            "maxCost": hop['maxBarCost'],
+            "currentHop": hop['hopId']
+        }
+    ]
+
+    hops.insert(new_hop)
+    return new_hop
 
 if __name__ == '__main__':
     app.run(port=5000)
