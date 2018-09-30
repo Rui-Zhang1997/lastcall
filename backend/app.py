@@ -1,11 +1,19 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 import pymongo as m
-
+import config
 import apis
+import json
+from bson import ObjectId
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
 
 app = Flask(__name__)
 
-chars = [str(i) for i in range(10)] + [chr(ord('A')) + i for i in range(26)]
+chars = [str(i) for i in range(10)] + [chr(ord('A') + i) for i in range(26)]
 hop_ids = (''.join(chars[i//(36 ** j) % 36] for j in range(4)) for i in range(0, 36**4))
 
 def counter():
@@ -19,7 +27,6 @@ memb_id = counter()
 def connect_to_db():
     client = m.MongoClient(config.DB_URI)
     db = client[config.DB_NAME]
-    db.authenticate(config.DB_USER,config.DB_PASS)
 
     return db
 
@@ -40,7 +47,7 @@ def start_hop():
 
     db = connect_to_db()
     db[config.COLLECTIONS['hop']].insert(hop)
-    return hop
+    return JSONEncoder().encode(hop)
 
 
 @app.route('/hop/join/<hopcode>', methods=["POST"])
