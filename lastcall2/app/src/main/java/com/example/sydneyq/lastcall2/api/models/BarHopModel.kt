@@ -8,24 +8,25 @@ enum class Crowdedness {
 }
 
 enum class Tolerance {
-    LIGHTWEIGHT, MODERATE, STAGGERED
+    LIGHTWEIGHT, MODERATE, LOTS
 }
 
 data class BarHopMeta(
         val hopId: String? = null,
         var hopName: String,
-        var sll: String,
-        var ell: String,
+        var creatorName: String,
+        var saddr: String,
+        var eaddr: String,
         var stime: Date,
         var barCount: Int,
-        var duration: Int) : Serializable
+        var maxBarCost: Int) : Serializable
 
 data class HopMember(
-        val memberId: Int? = null,
+        val memberId: String? = null,
         var memberName: String,
-        var drunkLevel: Tolerance,
+        var drunkLevel: Int,
         var maxCost: Int,
-        var crowdSize: Crowdedness,
+        // var crowdSize: Crowdedness,
         var currentHop: String) : Serializable
 
 data class BarData(
