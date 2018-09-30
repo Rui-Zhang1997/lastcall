@@ -54,8 +54,14 @@ class RegisterHop : AppCompatActivity() {
             }
             val name = creatorName.text.toString().trim()
             val hopname = hopName.text.toString().trim()
-            val startaddr = startAddr.text.toString().trim()
-            val endaddr = endAddr.text.toString().trim()
+            var startaddr = startAddr.text.toString().trim()
+            if (startaddr.length == 0 && DEBUG == PROGSTATE.DEBUG_NETWORK) {
+                startaddr = "103 Orchard St, New York, NY 10002"
+            }
+            var endaddr = endAddr.text.toString().trim()
+            if (endaddr.length == 0 && DEBUG == PROGSTATE.DEBUG_NETWORK) {
+                endaddr = "11 W 53rd St, New York, NY 10019"
+            }
             val hopStart = hopStartTime.text.toString().trim().split(":")
             val count = parseInt(hopCount.text.toString().trim())
             val maxAmt = parseInt(maxBarCost.text.toString().trim())

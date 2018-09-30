@@ -49,7 +49,7 @@
         android:layout_marginLeft="@dimen/createHopFieldMargin"
         android:layout_marginTop="@dimen/createHopFieldMargin"
         android:hint="When does it start?"
-        android:inputType="" />
+        android:inputType="time" />
     <EditText
         android:id="@+id/startAddr"
         android:layout_below="@id/hopStartTime"

@@ -50,8 +50,8 @@ def start_hop():
     hops.insert(hop)
     bars = list(apis.bars(apis.addy_to_geo(hop['saddr']), apis.addy_to_geo(hop['eaddr']), hop))
 
-    hops.update({'hopId':  hopcode}, {'$set': {'finalized': True}})
-    hops.update({'hopId':  hopcode}, {'$set': {'bars': bars}})
+    hops.update({'hopId':  hop['hopId']}, {'$set': {'finalized': True}})
+    hops.update({'hopId':  hop['hopId']}, {'$set': {'bars': bars}})
     return JSONEncoder().encode(hop)
 
 
@@ -101,13 +101,13 @@ def get_hop_member(id):
     hop = hops.find_one({'members': {'$elemMatch': {'memberId': id}}})
     if hop is None or hop == {} or hop == []:
         return 404, 'Member not found!'
-    return {
+    return jsonify({
         "memberName": hop['creatorName'],
         "memberId": id,
         "drunkLevel": hop['drunkLevel'],
         "maxCost": hop['maxBarCost'],
         "currentHop": hop['hopId']
-    }
+    })
 
 
 @app.route('/hop/<hopcode>')
@@ -121,10 +121,10 @@ def get_hop(hopcode):
     if not hop['finalized']:
         return 400, 'Hop not finalized!'
     print("HOP", hop)
-    return {
+    return jsonify({
         'hopId': hop['hopId'],
         'bars': hop['bars']
-    }
+    })
 
 @app.route('/hop/update/<mem_id>', methods=["POST"])
 def update_hop(mem_id):
@@ -155,7 +155,7 @@ def update_hop(mem_id):
 
     hops.update({'hopId':  new_hop['hopId']}, {'$set': {'finalized': True}})
     hops.update({'hopId':  new_hop['hopId']}, {'$set': {'bars': bars}})
-    return new_hop
+    return jsonify(new_hop)
 
 if __name__ == '__main__':
     app.run(port=5000)

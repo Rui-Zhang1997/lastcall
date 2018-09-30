@@ -500,10 +500,9 @@ def bars(src, dest, params):
         yield {
             'barName': bar['name'],
             'barId': bar['id'],
-            'barAddress': bar['location']['address'],
             'barRating': 'LOL',
             'barCost': 0,
-            'll': '{},{}'.format(b['location']['lat'], b['location']['lng']),
+            'll': '{},{}'.format(bar['location']['lat'], bar['location']['lng']),
             'menu': []
         }
 
