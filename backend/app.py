@@ -56,7 +56,7 @@ def add_to_hop(hopcode):
     hops = db[config.COLLECTIONS['hop']]
 
     hop = hops.find_one({'hopId': hopcode})
-    if hop is None or hope == {} or hop == []:
+    if hop is None or hop == {} or hop == []:
         return 404, 'Hop not found'
 
     member = request.json
@@ -86,7 +86,7 @@ def is_hop(hopcode):
     db = connect_to_db()
     hops = db[config.COLLECTIONS['hop']]
     hop = hops.find_one({'hopId': hopcode})
-    return not ( hop is None or hope == {} or hop == [])
+    return not ( hop is None or hop == {} or hop == [])
 
 @app.route('/hop/member/{id}')
 def get_hop_member(id):
@@ -94,7 +94,7 @@ def get_hop_member(id):
     db = connect_to_db()
     hops = db[config.COLLECTIONS['hop']]
     hop = hops.find_one({'members': {'$elemMatch': {'memberId': id}}})
-    if hop is None or hope == {} or hop == []:
+    if hop is None or hop == {} or hop == []:
         return 404, 'Member not found!'
     return {
         "memberName": hop['creatorName'],
@@ -105,30 +105,30 @@ def get_hop_member(id):
     }
 
 
-@app.route('/hop/{id}')
-def get_hop():
+@app.route('/hop/<hopcode>')
+def get_hop(hopcode):
     db = connect_to_db()
     hops = db[config.COLLECTIONS['hop']]
 
     hop = hops.find_one({'hopId': hopcode})
-    if hop is None or hope == {} or hop == []:
+    if hop is None or hop == {} or hop == []:
         return 404, 'Hop not found'
     if not hop['finalized']:
         return 400, 'Hop not finalized!'
-
+    print("HOP", hop)
     return {
-        'hopId': hop['id'],
+        'hopId': hop['hopId'],
         'bars': hop['bars']
     }
 
-@app.route('/hop/update/{member_id}', methods=["POST"])
+@app.route('/hop/update/<mem_id>', methods=["POST"])
 def update_hop(mem_id):
     hop = request.json
     db = connect_to_db()
     hops = db[config.COLLECTIONS['hop']]
 
     hop = hops.find_one({'hopId': hop['hopId']})
-    if hop is None or hope == {} or hop == []:
+    if hop is None or hop == {} or hop == []:
         return 404, 'Hop not found'
 
     hops.update({'hopId': hop['hopId'], '$pull': {'members': {'memberId': mem_id}}})
