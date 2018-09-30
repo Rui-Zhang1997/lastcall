@@ -492,8 +492,8 @@ def bars(src, dest, params):
     origin = addy_to_geo(src)
     end = addy_to_geo(dest)
     direction = angle_from(origin, end)
-    bars = filter(lambda b: direction - 10 <= angle_from(origin, (b['location']['lat'], b['location']['lng'])) <= direction + 10,
-            foursquare(origin, params['limit']))
+    bars = sorted(foursquare(origin, params['limit']),
+        key = lambda b: angle_from(origin, (b['location']['lat'], b['location']['lng'])))
     return bars
 
 for b in bars('251 Mercer St, New York, NY, USA', '140 E 14th St, New York, NY 10003', {'limit': 0}):
