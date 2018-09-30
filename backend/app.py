@@ -46,7 +46,12 @@ def start_hop():
     ]
 
     db = connect_to_db()
-    db[config.COLLECTIONS['hop']].insert(hop)
+    hops = db[config.COLLECTIONS['hop']]
+    hops.insert(hop)
+    bars = list(apis.bars(apis.addy_to_geo(hop['sll']), apis.addy_to_geo(hop['sll']), hop))
+
+    hops.update({'hopId':  hopcode}, {'$set': {'finalized': True}})
+    hops.update({'hopId':  hopcode}, {'$set': {'bars': bars}})
     return JSONEncoder().encode(hop)
 
 
@@ -146,6 +151,10 @@ def update_hop(mem_id):
     ]
 
     hops.insert(new_hop)
+    bars = list(apis.bars(apis.addy_to_geo(hop['sll']), apis.addy_to_geo(hop['sll']), hop))
+
+    hops.update({'hopId':  new_hop['hopId']}, {'$set': {'finalized': True}})
+    hops.update({'hopId':  new_hop['hopId']}, {'$set': {'bars': bars}})
     return new_hop
 
 if __name__ == '__main__':
