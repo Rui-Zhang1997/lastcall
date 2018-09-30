@@ -62,6 +62,7 @@ def add_to_hop(hopcode):
     member = request.json
     member['id'] = next(memb_id)
 
+    hops.update({'hopId':  hopcode}, {'$push': {'members': member}})
     if not hop['finalized']:
         #make the route
         bars = list(apis.bars(apis.addy_to_geo(hop['sll']), apis.addy_to_geo(hop['sll']), hop))
@@ -72,8 +73,12 @@ def add_to_hop(hopcode):
             'hopId': hopcode,
             'bars': bars
         }
+    else:
+        return {
+            'hopId': hopcode,
+            'bars': hop['bars']
+        }
 
-    hops.update({'hopId':  hopcode}, {'$push': {'members': member}})
 
 
 @app.route('/hop/exists/{hopcode}')
