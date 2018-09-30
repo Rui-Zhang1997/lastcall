@@ -26,15 +26,17 @@ def connect_to_db():
 @app.route('/hop/make', methods=["POST"])
 def start_hop():
     hop = request.json
-    start_addy = hop['start']
-    end_addy = hop['end']
     hop['hopId'] = next(hop_ids)
-    hop['hopName'] = hop['name']
-    hop['barCount'] = hop['duration']
-    hop['sll'] = start_addy
-    hop['ell'] = end_addy
-    hop['finalized'] = False
-    hop['members'] = []
+    hop['finalized'] = True
+    hop['members'] = [
+        {
+            "memberName": hop['creatorName'],
+            "memberId": next(memb_id),
+            "drunkLevel": hop['drunkLevel'],
+            "maxCost": hop['maxBarCost'],
+            "currentHop": hop['hopId']
+        }
+    ]
 
     db = connect_to_db()
     db[config.COLLECTIONS['hop']].insert(hop)
@@ -55,24 +57,57 @@ def add_to_hop(hopcode):
 
     if not hop['finalized']:
         #make the route
-        bars = apis.bars(apis.addy_to_geo(hop['sll']), apis.addy_to_geo(hop['sll']), hop)
+        bars = list(apis.bars(apis.addy_to_geo(hop['sll']), apis.addy_to_geo(hop['sll']), hop))
 
         hops.update({'hopId':  hopcode}, {'$set': {'finalized': True}})
+        hops.update({'hopId':  hopcode}, {'$set': {'bars': bars}})
+        return {
+            'hopId': hopcode,
+            'bars': bars
+        }
 
     hops.update({'hopId':  hopcode}, {'$push': {'members': member}})
 
 
 @app.route('/hop/exists/{hopcode}')
-def is_hop():
-    return "adjust"
+def is_hop(hopcode):
+    db = connect_to_db()
+    hops = db[config.COLLECTIONS['hop']]
+    hop = hops.find_one({'hopId': hopcode})
+    return not ( hop is None or hope == {} or hop == [])
 
 @app.route('/hop/member/{id}')
-def get_hop_member():
-    return "hop"
+def get_hop_member(id):
+    #if the member is in the hop, they have the same stats as the hop creator
+    db = connect_to_db()
+    hops = db[config.COLLECTIONS['hop']]
+    hop = hops.find_one({'members': {'$elemMatch': {'memberId': id}}})
+    if hop is None or hope == {} or hop == []:
+        return 404, 'Member not found!'
+    return {
+        "memberName": hop['creatorName'],
+        "memberId": id,
+        "drunkLevel": hop['drunkLevel'],
+        "maxCost": hop['maxBarCost'],
+        "currentHop": hop['hopId']
+    }
+
 
 @app.route('/hop/{id}')
 def get_hop():
-    return "hop"
+    db = connect_to_db()
+    hops = db[config.COLLECTIONS['hop']]
+
+    hop = hops.find_one({'hopId': hopcode})
+    if hop is None or hope == {} or hop == []:
+        return 404, 'Hop not found'
+    if not hop['finalized']:
+        return 400, 'Hop not finalized!'
+
+    return {
+        'hopId': hop['id'],
+        'bars': hop['bars']
+    }
 
 @app.route('/hop/update/{member_id}', methods=["POST"])
 def update_hop():

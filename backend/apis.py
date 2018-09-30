@@ -488,13 +488,22 @@ def addy_to_geo(addy):
     for res in google_senpai['results']:
         if 'geometry' in res and 'location' in res['geometry']:
             return res['geometry']['location']['lat'], res['geometry']['location']['lng']
+    raise Exception(google_senpai)
 
 def bars(src, dest, params):
     origin = addy_to_geo(src)
     end = addy_to_geo(dest)
     direction = angle_from(origin, end)
-    bars = sorted(foursquare(origin, params['duration']),
-        key = lambda b: abs(direction - angle_from(origin, (b['location']['lat'], b['location']['lng']))))
-    return bars
+    for bar in sorted(foursquare(origin, params['duration']),
+            key = lambda b: abs(direction - angle_from(origin, (b['location']['lat'], b['location']['lng'])))):
+        yield {
+            'barName': bar['name'],
+            'barId': bar['id'],
+            'barAddress': bar['location']['address'],
+            'barRating': 'LOL',
+            'barCost': 0,
+            'll': '{},{}'.format(b['location']['lat'], b['location']['lng']),
+            'menu': []
+        }
 
-print(route(addy_to_geo('251 Mercer St, Ny, USA'), addy_to_geo('140 E 14th Street NY USA')))
+print(list(foursquare(addy_to_geo('251 Mercer Street, NY USA'), 5)))
