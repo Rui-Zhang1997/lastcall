@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:gravity="center_vertical"
+    android:padding="5dp">
+    <TextView
+        android:id="@+id/drink_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="The Name of A Drink"
+        android:textSize="20dp"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/drink_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/drink_title"
+        android:layout_alignBottom="@id/drink_title"
+        android:layout_marginLeft="10dp"
+        android:textSize="20dp"
+        android:text="$00.00"/>
+    <TextView
+        android:id="@+id/drink_alcohol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@id/drink_title"
+        android:text="10%/vol"
+        android:textStyle="bold"
+        android:textSize="20dp"/>
+    <TextView
+        android:id="@+id/drink_ingredients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/drink_title"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:text="Replace Me!,Replace Me!,Replace Me!, Replace Me!, Replace Me!, Replace Me!"/>
+
+</RelativeLayout>

@@ -18,17 +18,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0-alpha1'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:design:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:6.5.0'
+    implementation 'com.github.mancj:SlideUp-Android:$current_version'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+    implementation 'ru.ztrap:RxSlideUp2:2.0.1' //optional, for reactive listeners based on RxJava-2
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

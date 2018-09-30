@@ -6,7 +6,7 @@ import com.example.sydneyq.lastcall2.api.models.HopMember;
 
 import java.util.Date;
 
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -15,7 +15,7 @@ import retrofit2.http.Path;
 
 public interface LastCallRESTService {
     @POST("hop/make")
-    Call<BarHopMeta> createNewHop(
+    Observable<BarHopMeta> createNewHop(
             @Body String start,
             @Body String end,
             @Body String name,
@@ -23,15 +23,18 @@ public interface LastCallRESTService {
             @Body int duration);
 
     @POST("hop/join/{hopcode}")
-    Call<BarHopMeta> joinHop(@Path("hopcode") String hopcode, @Body HopMember member);
+    Observable<HopMember> joinHop(@Path("hopcode") String hopcode, @Body HopMember member);
+
+    @POST("hop/exists/{hopcode}")
+    Observable<Boolean> checkIfHopExists(@Path("hopcode") String hopcode);
 
     @GET("hop/member/{id}")
-    Call<HopMember> getMember(@Path("id") String id);
+    Observable<HopMember> getMember(@Path("id") String id);
 
     @GET("hop/{hopId}")
-    Call<Hop> getHop(@Path("hopId") String hopId);
+    Observable<Hop> getHop(@Path("hopId") String hopId);
 
     @POST("hop/update/{memberId}")
-    Call<BarHopMeta> updateHop(@Path("memberId") String memberId, @Body Hop hop);
+    Observable<BarHopMeta> updateHop(@Path("memberId") String memberId, @Body Hop hop);
 }
 
