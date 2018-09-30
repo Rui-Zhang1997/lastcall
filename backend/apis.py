@@ -482,13 +482,14 @@ def route(*waypts):
     return res.json()
 
 def addy_to_geo(addy):
-    params = {'address': addy, 'key': config.GMAP_API}
-    req_boi = req.get('https://maps.googleapis.com/maps/api/geocode/json', params=params)
-    google_senpai = req_boi.json()
-    for res in google_senpai['results']:
-        if 'geometry' in res and 'location' in res['geometry']:
-            return res['geometry']['location']['lat'], res['geometry']['location']['lng']
-    raise Exception(google_senpai)
+    HERE_BASE_URL = "https://geocoder.api.here.com/6.2/geocode.json"
+    params = {'searchtext': addy}
+    params.update(config.HERE_API_PARAMS)
+    here = req.get(HERE_BASE_URL, params=params)
+    there = here.json()
+    print(there)
+    coords = there['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']
+    return coords['Latitude'], coords['Longitude']
 
 def bars(src, dest, params):
     origin = addy_to_geo(src)
@@ -506,4 +507,3 @@ def bars(src, dest, params):
             'menu': []
         }
 
-print(list(foursquare(addy_to_geo('251 Mercer Street, NY USA'), 5)))
