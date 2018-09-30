@@ -48,7 +48,7 @@ def start_hop():
     db = connect_to_db()
     hops = db[config.COLLECTIONS['hop']]
     hops.insert(hop)
-    bars = list(apis.bars(apis.addy_to_geo(hop['sll']), apis.addy_to_geo(hop['sll']), hop))
+    bars = list(apis.bars(apis.addy_to_geo(hop['saddr']), apis.addy_to_geo(hop['eaddr']), hop))
 
     hops.update({'hopId':  hopcode}, {'$set': {'finalized': True}})
     hops.update({'hopId':  hopcode}, {'$set': {'bars': bars}})
@@ -70,7 +70,7 @@ def add_to_hop(hopcode):
     hops.update({'hopId':  hopcode}, {'$push': {'members': member}})
     if not hop['finalized']:
         #make the route
-        bars = list(apis.bars(apis.addy_to_geo(hop['sll']), apis.addy_to_geo(hop['sll']), hop))
+        bars = list(apis.bars(apis.addy_to_geo(hop['saddr']), apis.addy_to_geo(hop['saddr']), hop))
 
         hops.update({'hopId':  hopcode}, {'$set': {'finalized': True}})
         hops.update({'hopId':  hopcode}, {'$set': {'bars': bars}})
@@ -151,7 +151,7 @@ def update_hop(mem_id):
     ]
 
     hops.insert(new_hop)
-    bars = list(apis.bars(apis.addy_to_geo(hop['sll']), apis.addy_to_geo(hop['sll']), hop))
+    bars = list(apis.bars(apis.addy_to_geo(hop['saddr']), apis.addy_to_geo(hop['eaddr']), hop))
 
     hops.update({'hopId':  new_hop['hopId']}, {'$set': {'finalized': True}})
     hops.update({'hopId':  new_hop['hopId']}, {'$set': {'bars': bars}})
