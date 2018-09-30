@@ -15,12 +15,7 @@ import retrofit2.http.Path;
 
 public interface LastCallRESTService {
     @POST("hop/make")
-    Observable<BarHopMeta> createNewHop(
-            @Body String start,
-            @Body String end,
-            @Body String name,
-            @Body Date stime,
-            @Body int duration);
+    Observable<HopMember> createNewHop(@Body BarHopMeta meta);
 
     @POST("hop/join/{hopcode}")
     Observable<HopMember> joinHop(@Path("hopcode") String hopcode, @Body HopMember member);

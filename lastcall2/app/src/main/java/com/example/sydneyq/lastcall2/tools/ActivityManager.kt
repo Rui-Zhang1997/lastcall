@@ -13,7 +13,7 @@ fun <T: Any> startActivityWithBundle(currentActivity: Activity,
         putExtra("args", bundle)
     }
     if (!addToBackstack) {
-        intent.flags = (intent.flags or Intent.FLAG_ACTIVITY_NO_HISTORY)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
     }
     currentActivity.startActivity(intent)
 }

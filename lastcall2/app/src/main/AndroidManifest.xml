@@ -18,10 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CreateHop" />
         <activity android:name=".activities.createhop.RegisterHop" />
-        <activity android:name=".activities.reuseable.LoadingActivity" />
-        <activity android:name=".activities.HopActivity" />
+        <activity android:name=".activities.reuseable.LoadingActivity"
+             android:excludeFromRecents="true"/>
         <activity android:name=".activities.viewhop.HopView" />
         <activity android:name=".activities.createhop.JoinHop"></activity>
     </application>

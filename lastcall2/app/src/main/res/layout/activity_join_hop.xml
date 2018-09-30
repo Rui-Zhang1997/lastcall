@@ -7,7 +7,7 @@
     tools:context=".activities.createhop.JoinHop">
 
     <TextView
-        android:id="@+id/fragmentTitle"
+        android:id="@+id/activityTitle"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -22,7 +22,7 @@
 
     <EditText
         android:id="@+id/memberName"
-        android:layout_below="@id/fragmentTitle"
+        android:layout_below="@id/activityTitle"
         android:layout_centerHorizontal="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/createHopFieldHeight"
@@ -70,6 +70,26 @@
         android:text="Lots"
         android:scaleY="0.75"
         android:scaleX="0.75" />
+    <EditText
+        android:id="@+id/maxBarCost"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/createHopFieldHeight"
+        android:layout_below="@id/toleranceLow"
+        android:layout_marginRight="@dimen/createHopFieldMargin"
+        android:layout_marginLeft="@dimen/createHopFieldMargin"
+        android:layout_marginTop="@dimen/createHopFieldMargin"
+        android:textSize="20dp"
+        android:inputType="number"
+        android:hint="Dollaroos"/>
+    <TextView
+        android:id="@+id/hopCostLabel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/createHopFieldHeight"
+        android:text="Dollars or Less"
+        android:layout_below="@id/toleranceLow"
+        android:textSize="20dp"
+        android:layout_toRightOf="@id/maxBarCost"
+        android:gravity="bottom" />
     <Button
         android:id="@+id/submitHop"
         android:layout_width="150dp"
