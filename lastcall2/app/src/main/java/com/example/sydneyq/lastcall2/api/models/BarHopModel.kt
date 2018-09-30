@@ -18,6 +18,7 @@ data class BarHopMeta(
         var saddr: String,
         var eaddr: String,
         var stime: Date,
+        var drunkLevel: Int,
         var barCount: Int,
         var maxBarCost: Int) : Serializable
 
@@ -34,7 +35,9 @@ data class BarData(
         val barName: String,
         var barAddress: String,
         val barRating: String,
-        val barCost: Int) : Serializable
+        val barCost: Int,
+        val ll: String,
+        val menu: Array<DrinkData>) : Serializable
 
 data class DrinkData(
         val drinkName: String,
