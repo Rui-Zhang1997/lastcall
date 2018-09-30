@@ -507,4 +507,3 @@ def bars(src, dest, params):
             'menu': []
         }
 
-print(list(foursquare(addy_to_geo('251 Mercer Street, NY USA'), 5)))
