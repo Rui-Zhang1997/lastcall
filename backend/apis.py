@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import config
 import populartimes as pop
 import re
+from math import atan, pi, sqrt
 
 ALC_CONTENT_TABLE = {
         "Abita Amber": 0.44,
@@ -161,7 +162,7 @@ ALC_CONTENT_TABLE = {
         "Guinness": 0.04,
         "H. Walker Creme de Cocoa": 0.27,
         "H. Walker Creme de Menthe": 0.30,
-        "Haake Beck Non-Alcoholic": &lt;.003,
+        "Haake Beck Non-Alcoholic": .003,
         "Hard Core Cider": 0.06,
         "Heaven Hill Bourbon": 0.40,
         "Heaven Hill Ol Style": 0.50,
@@ -344,7 +345,7 @@ ALC_CONTENT_TABLE = {
         "Seagrams Seven": 0.40,
         "Seagrams Seven Fuzzy Navel": 0.06,
         "Sex on the Beach": 0.30,
-        "Sharps": &lt;.005,
+        "Sharps": .005,
         "Sherry": 0.20,
         "Shiner Blonde": 0.04,
         "Shiner Bock": 0.04,
@@ -405,6 +406,21 @@ ALC_CONTENT_TABLE = {
         "Zima": 0.03
 }
 
+def substrings(st):
+    for i in range(len(st)):
+        for j in range(i + 1, len(st) + 1):
+            yield st[i:j]
+
+ALC_CONTENT_TABLE = [(set(substrings(i.lower())), ALC_CONTENT_TABLE[i]) for i in ALC_CONTENT_TABLE]
+
+
+def angle_from(point, to):
+    angle = atan((point[1] - to[1])/(point[0] - to[0]))
+    if point[0] > to[0]:
+        return pi + angle
+    return angle
+
+
 def get_alc_vol(drink):
     #it me
     VOLUME_TABLE = "https://www.moderatedrinking.com/self_monitoring/default_self_monitoring.aspx?p=alcohol_content_of_drinks"
@@ -426,18 +442,12 @@ def get_alc_vol(drink):
     else:
         bebidas = [(cosa.get_text(), limpia(cosa.find_all_previous('div', **{'class': 'oz-value'}))) for coas in pagina.find_all('div.x-recipe-ingredient')]
 
-    sitio_tabula = req.open(VOLUME_TABLE)
-    tabula = BeautifulSoup(sitio_tabula).find('table', dir="LTR")
-    total = 0
-    for (bebida, cantidad) in bebidas:
-        lo_que_es = tabula.find('div', text=re.compile(bebida, re.I))
-        porcentaje = float(tabula.find('div', align='left').get_text())
-        total += cantidad * porcentaje
-    return total
+    return sum(i[0] * i[1] for i in bebidas)
 
-def foursquare(place):
+
+def foursquare(place, num_bars):
     BASE_URL = "https://api.foursquare.com/v2/venues/search"
-    BAR_URL = "https://api.foursquare.com/v2/venues/{}/tips"
+    BAR_URL = "https://api.foursquare.com/v2/venues/{}/menu"
 
     params = {
         'query': "",
@@ -450,14 +460,11 @@ def foursquare(place):
     params.update(config.FOURSQUARE_PARAMS)
 
     bar_params = {
-        "limit": 50
     }
     bar_params.update(config.FOURSQUARE_PARAMS)
 
     res = req.get(BASE_URL, params=params)
-    for bar in res.json()['response']['venues']:
-        b_res = req.get(BAR_URL.format(bar['id']), params=bar_params)
-        print(b_res.json())
+    yield from res.json()['response']['venues']
 
 def route(src, dest):
     BASE_URL = "https://route.api.here.com/routing/7.2/calculateroute.json"
@@ -482,7 +489,12 @@ def addy_to_geo(addy):
             return res['geometry']['location']['lat'], res['geometry']['location']['lng']
 
 def bars(src, dest, params):
-    places = pop.get(config.GMAP_API,["bar"], src, dest, all_places = False)
-    pass
+    origin = addy_to_geo(src)
+    end = addy_to_geo(dest)
+    direction = angle_from(origin, end)
+    bars = filter(lambda b: direction - 10 <= angle_from(origin, (b['location']['lat'], b['location']['lng'])) <= direction + 10,
+            foursquare(origin, params['limit']))
+    return bars
 
-foursquare(addy_to_geo('251 Mercer St, New York, NY, USA'))
+for b in bars('251 Mercer St, New York, NY, USA', '140 E 14th St, New York, NY 10003', {'limit': 0}):
+    print(b)
