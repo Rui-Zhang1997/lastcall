@@ -1,5 +1,6 @@
 package com.example.sydneyq.lastcall2.api.models
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 import java.util.*
 
@@ -23,12 +24,12 @@ data class BarHopMeta(
         var maxBarCost: Int) : Serializable
 
 data class HopMember(
-        val memberId: String? = null,
-        var memberName: String,
+        @SerializedName("_id") val memberId: String? = null,
+        @SerializedName("creatorName") var memberName: String,
         var drunkLevel: Int,
-        var maxCost: Int,
+        @SerializedName("maxBarCost") var maxCost: Int,
         // var crowdSize: Crowdedness,
-        var currentHop: String) : Serializable
+        @SerializedName("hopId") var currentHop: String) : Serializable
 
 data class BarData(
         val barId: String,

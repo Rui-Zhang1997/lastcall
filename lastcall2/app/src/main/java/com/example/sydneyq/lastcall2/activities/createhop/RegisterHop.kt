@@ -39,9 +39,10 @@ class RegisterHop : AppCompatActivity() {
         setToggleListener(toleranceMed)
         setToggleListener(toleranceHigh)
         submitHop.setOnClickListener submitlistener@{
-            arrayListOf<EditText>(creatorName, hopName, hopStartTime, startAddr,
-                    endAddr, hopCount, maxBarCost).map {
+            arrayListOf<EditText>(creatorName, hopName, hopStartTime,
+                    hopCount, maxBarCost).map {
                 if (it.text.toString().trim().isEmpty()) {
+                    Log.e("SDF", "Test Failed 0")
                     Toast.makeText(this, "Please fill out all fields!", Toast.LENGTH_SHORT)
                     return@submitlistener
                 }
@@ -67,22 +68,26 @@ class RegisterHop : AppCompatActivity() {
             val maxAmt = parseInt(maxBarCost.text.toString().trim())
             if (count < 1 || maxAmt < 1) {
                 Toast.makeText(this, "All numeric fields cannot be less than one!", Toast.LENGTH_SHORT)
+                Log.e("SDF", "Test failed 1")
                 return@submitlistener
             }
             if (hopStart.size != 2) {
                 Toast.makeText(this, "Please enter time in 24-hour format of the form HH:mm (e.g. 23:10, 11:30)", Toast.LENGTH_LONG)
+                Log.e("SDF", "Test failed 2")
                 return@submitlistener
             }
             val hr = parseInt(hopStart.get(0))
             val min = parseInt(hopStart.get(1))
             if (hr < 0 || hr > 23 || min < 0 || min > 59) {
                 Toast.makeText(this, "Hours must be between 0-23, minutes must be between 0-59", Toast.LENGTH_LONG)
+                Log.e("SDF", "Test field 3")
                 return@submitlistener
             }
             val time = Calendar.getInstance()
             time.set(Calendar.HOUR_OF_DAY, hr)
             time.set(Calendar.MINUTE, min)
             var meta = BarHopMeta("", name, hopname, startaddr, endaddr, time.time, tolerance, count, maxAmt)
+            Log.e("SDF", meta.toString())
             startActivityWithBundle(this, LoadingActivity::class.java, null, false)
             if (DEBUG != PROGSTATE.DEBUG_NO_NETWORK) {
                 lastCallREST.createNewHop(meta)

@@ -33,6 +33,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/slide_up_view_touchbar"
-            android:name="com.example.sydneyq.lastcall2.activities.reuseable.LoadingFragment"/>
+            android:name="com.example.sydneyq.lastcall2.fragments.SlideUpListFragment"/>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

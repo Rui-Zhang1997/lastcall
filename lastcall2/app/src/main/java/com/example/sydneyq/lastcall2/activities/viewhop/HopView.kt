@@ -19,6 +19,7 @@ import io.reactivex.subjects.AsyncSubject
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_hop_view.*
 
+
 class HopView : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +28,16 @@ class HopView : AppCompatActivity() {
         mapView.onCreate(savedInstanceState)
         val args = intent.extras.getBundle("args")
         val member = args.getSerializable("member") as HopMember
+        if (member == null) {
+            Log.e("HOPVIEW", "MEMBER IS NULL");
+        } else {
+            Log.e("HOPVIEW", member.toString())
+        }
         lastCallREST.getHop(member.currentHop)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map { hop ->
+                .subscribe { hop ->
+                    Log.e("HOPRESULT", "HOP" + hop.toString())
                     val listFragment = SlideUpListFragment()
                     val args = Bundle()
                     args.putSerializable("bars", hop.bars)

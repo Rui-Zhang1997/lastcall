@@ -1,162 +1,47 @@
-from flask import Flask, render_template, request, redirect, jsonify
-import pymongo as m
-import config
-import apis
-import json
-from bson import ObjectId
-
-class JSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        return json.JSONEncoder.default(self, o)
+from flask import Flask
 
 app = Flask(__name__)
 
-chars = [str(i) for i in range(10)] + [chr(ord('A') + i) for i in range(26)]
-hop_ids = (''.join(chars[i//(36 ** j) % 36] for j in range(4)) for i in range(0, 36**4))
+class Member:
+    def __init__(self, member_id, member_name, drunk_level, max_cost, current_hop):
+        self.member_id = member_id
+        self.member_name = member_name
+        self.drunk_level = drunk_level
+        self.max_cost = max_cost
+        self.current_hop = current_hop
 
-def counter():
-    i = 0
-    while True:
-        yield i
-        i += 1
+def Hop:
+    def __init__(self, hop_id, hop_name, creator_name, saddr, eaddr, stime, drunk_level, bar_count, max_bar_cost):
+        self.hop_id = hop_id
+        self.hop_name = hop_name
+        self.creator_name = creator_name
+        self.saddr = saddr
+        self.eaddr = eaddr
+        self.stime = stime
+        self.drunk_level = drunk_level
+        self.bar_count = bar_count
+        self.max_bar_cost = max_bar_cost
 
-memb_id = counter()
+@app.route('/hop/make')
+def make_hop():
+    pass
 
-def connect_to_db():
-    client = m.MongoClient(config.DB_URI)
-    db = client[config.DB_NAME]
+@app.route('hop/join/<hopcode>')
+def join_hop():
+    pass
 
-    return db
+@app.route('/hop/exists/<hopcode>')
+def check_hop():
+    pass
 
-@app.route('/hop/make', methods=["POST"])
-def start_hop():
-    hop = request.json
-    hop['hopId'] = next(hop_ids)
-    hop['finalized'] = True
-    hop['members'] = [
-        {
-            "memberName": hop['creatorName'],
-            "memberId": next(memb_id),
-            "drunkLevel": hop['drunkLevel'],
-            "maxCost": hop['maxBarCost'],
-            "currentHop": hop['hopId']
-        }
-    ]
+@app.route('/hop/member/<id>')
+def get_member():
+    pass
 
-    db = connect_to_db()
-    hops = db[config.COLLECTIONS['hop']]
-    hops.insert(hop)
-    bars = list(apis.bars(apis.addy_to_geo(hop['saddr']), apis.addy_to_geo(hop['eaddr']), hop))
+@app.route('/hop/<hopid>')
+def get_hop():
+    pass
 
-    hops.update({'hopId':  hop['hopId']}, {'$set': {'finalized': True}})
-    hops.update({'hopId':  hop['hopId']}, {'$set': {'bars': bars}})
-    return JSONEncoder().encode(hop)
-
-
-@app.route('/hop/join/<hopcode>', methods=["POST"])
-def add_to_hop(hopcode):
-    db = connect_to_db()
-    hops = db[config.COLLECTIONS['hop']]
-
-    hop = hops.find_one({'hopId': hopcode})
-    if hop is None or hop == {} or hop == []:
-        return 404, 'Hop not found'
-
-    member = request.json
-    member['id'] = next(memb_id)
-
-    hops.update({'hopId':  hopcode}, {'$push': {'members': member}})
-    if not hop['finalized']:
-        #make the route
-        bars = list(apis.bars(apis.addy_to_geo(hop['saddr']), apis.addy_to_geo(hop['saddr']), hop))
-
-        hops.update({'hopId':  hopcode}, {'$set': {'finalized': True}})
-        hops.update({'hopId':  hopcode}, {'$set': {'bars': bars}})
-        return {
-            'hopId': hopcode,
-            'bars': bars
-        }
-    else:
-        return {
-            'hopId': hopcode,
-            'bars': hop['bars']
-        }
-
-
-
-@app.route('/hop/exists/{hopcode}')
-def is_hop(hopcode):
-    db = connect_to_db()
-    hops = db[config.COLLECTIONS['hop']]
-    hop = hops.find_one({'hopId': hopcode})
-    return not ( hop is None or hop == {} or hop == [])
-
-@app.route('/hop/member/{id}')
-def get_hop_member(id):
-    #if the member is in the hop, they have the same stats as the hop creator
-    db = connect_to_db()
-    hops = db[config.COLLECTIONS['hop']]
-    hop = hops.find_one({'members': {'$elemMatch': {'memberId': id}}})
-    if hop is None or hop == {} or hop == []:
-        return 404, 'Member not found!'
-    return jsonify({
-        "memberName": hop['creatorName'],
-        "memberId": id,
-        "drunkLevel": hop['drunkLevel'],
-        "maxCost": hop['maxBarCost'],
-        "currentHop": hop['hopId']
-    })
-
-
-@app.route('/hop/<hopcode>')
-def get_hop(hopcode):
-    db = connect_to_db()
-    hops = db[config.COLLECTIONS['hop']]
-
-    hop = hops.find_one({'hopId': hopcode})
-    if hop is None or hop == {} or hop == []:
-        return 404, 'Hop not found'
-    if not hop['finalized']:
-        return 400, 'Hop not finalized!'
-    print("HOP", hop)
-    return jsonify({
-        'hopId': hop['hopId'],
-        'bars': hop['bars']
-    })
-
-@app.route('/hop/update/<mem_id>', methods=["POST"])
-def update_hop(mem_id):
-    hop = request.json
-    db = connect_to_db()
-    hops = db[config.COLLECTIONS['hop']]
-
-    hop = hops.find_one({'hopId': hop['hopId']})
-    if hop is None or hop == {} or hop == []:
-        return 404, 'Hop not found'
-
-    hops.update({'hopId': hop['hopId'], '$pull': {'members': {'memberId': mem_id}}})
-
-    new_hop['hopId'] = next(hop_ids)
-    new_hop['finalized'] = True
-    new_hop['members'] = [
-        {
-            "memberName": hop['creatorName'],
-            "memberId": next(memb_id),
-            "drunkLevel": hop['drunkLevel'],
-            "maxCost": hop['maxBarCost'],
-            "currentHop": hop['hopId']
-        }
-    ]
-
-    hops.insert(new_hop)
-    bars = list(apis.bars(apis.addy_to_geo(hop['saddr']), apis.addy_to_geo(hop['eaddr']), hop))
-
-    hops.update({'hopId':  new_hop['hopId']}, {'$set': {'finalized': True}})
-    hops.update({'hopId':  new_hop['hopId']}, {'$set': {'bars': bars}})
-    return jsonify(new_hop)
-
-if __name__ == '__main__':
-    app.run(port=5000)
-
+@app.route('/hop/update/<memberid>')
+def update_member():
+    pass

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,6 +97,8 @@ class SlideUpListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val args = arguments
+        if (args != null) Log.e("LISTFRAGARGS", (args!!.getSerializable("data") as Array<BarData>).size.toString());
+        else { Log.e("ARGS", "ARGSISNULL") }
         bar_list_recyclerview.layoutManager = LinearLayoutManager(context)
         if (args!!.getInt("type") == 0) {
             bar_list_recyclerview.adapter = BarListAdapter(args!!.get("data") as Array<BarData>, barSelectedSubject)
